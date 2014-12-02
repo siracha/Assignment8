@@ -1,0 +1,179 @@
+Assignment 8
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Attached Files:
+File ass8.mp4 (4.335 MB)
+
+In this final assignment you will create a simple “semi-real-time” maze game that displays and plays in the console window. This assignment will make use of Vectors, lists, classes, overloading, advanced console commands and a secondary thread. A maze will play as follows:
+
+ At the start the screen is cleared and a maze is displayed.
+ The player’s character is displayed at the start position, and a timer starts.
+ The player uses the arrow keys to navigate to the end position.
+ When the game ends, the score is displayed. If the player makes the high score table they are prompted for  their name. Score is defined as “number of seconds to complete the maze”. Less seconds is better.
+ NOTE:
+ "Ending" means the player reached the end of the maze.
+ The game must also support quitting in progress. No score is saved if this occurs.
+
+Additional features:
+----------------------
+ Aside from the core game, a full menu system will be implemented with the following:
+  Play Game: leads to a separate menu with at least 3 selectable mazes (easy, med, hard). From there, a game   is started. Each maze has its own leaderboard, color set and background music.
+  Help & Options: displays “How to Play”, “Controls” and “Back” as per previous assignments.
+  Leaderboard: Prompts for the maze #, and displays the appropriate leaderboard up to 5 entries.
+  NOTE: This means 3 separate leaderboard files must be stored.
+ Mazes are stored as loose .txt files as shown in class. At least 3 different size mazes are required (ie.  Easy, med, hard)
+ The game must make use of colour and sound, with ASCII (code page 437) characters set to individual  colours, as per new console methods introduced after week 1
+  (see http://msdn.microsoft.com/en-us/library/windows/desktop/ms682073%28v=vs.85%29.aspx)
+  Asci code page 437 characters are here: http://en.wikipedia.org/wiki/Code_page_437
+
+Submission details
+-----------------------
+ The assignment will be developed in stages partially through class.
+  After week 1: you will need to demonstrate the ability to load a maze (non-playable) as shown in class.   Marks will be attributed to this.
+  After week 2: a peer-driven code-review may take place (time-permitting)
+
+Additional requirement (updated before start of week 3)
+------------------------------------------------------- 
+Now that we have implemented a streamlined way to add new maze title types (using enum MazeType), the new  requirement is to make use of it as follows:
+ Add 1 more MazeType to the core tile tiles (MAZE_WALL, MAZE_EMPTY, MAZE_ERROR, MAZE_START and MAZE_END) as  defined in enum MazeType.
+  It must add an extra game-play element of your choosing.  This can be simple (eg. add or subtract from     timer) or something more complex. An example (picking up a key) will be partially shown.  
+Some examples:
+ Subtract from the timer (works if there is more than 1 path to the end). This is the easiest. Don't forget  to change the tile to MAZE_EMPTY after you've hit it once!
+ Have fake end tiles (or even random ones)
+ Teleport to another position
+ Hitting a tile turns on/off other tiles
+ It is easy to change tiles
+Coding details:
+---------------
+This project will be implemented using multiple files and classes. It will also make use of console commands to add colour and move the cursor.
+
+ The Maze is managed using a 2-D vector
+ No global variables are allowed beyond those introduced to support the timer and console handles (to be  introduced in-class after week 1)
+
+Code Files (these are minimums. Additional files and/or functions may be required):
+
+ Main.cpp: the entry point and main control loop that drives the main menu
+ Functions.cpp/.h: menu functions and your main game loop (ie. playGame() )
+ maze.cpp/maze.h: the CMaze and CMazeItem classes.
+ Player.cpp/.h: the CPlayer class for the human player.
+ Leaderboard.cpp/.h: The leaderboard code. This should require minimal changes from previous assignments.
+
+Main.cpp:
+
+Main() is structured as follows:
+ Some setup code required for console and threads is called, which will be detailed in class from the 2nd  week.
+ A do-while loop and a switch statement with 4 cases controls the flow. Inside this loop, the following  calls are made:
+  int showMenu(): Displays the main menu, and returns the selection made.
+  A switch statement acts on the choice made:
+   case 1: Represents the "Play game" option. 
+    chooseMaze(): returns an int representing the maze selected.
+    playGame(): is called, passing in the maze #. This is where the actual gameplay loop is.
+   case 2: represents "Help & Options":
+    helpAndOptions(): handles the help & options menu
+   case 3: Represents "Leaderboard":
+    showLeaderboard(): handles the leaderboard display
+   case 0: Exit Game
+    This can simply display a "Quitting..." message
+ It should contain nothing else.
+ Some cleanup code necessary for working with the console and threads is called.
+ The additional calls required to handle setting up the timer, and changing the console mode will be  detailed in class.
+
+Functions.cpp:
+
+ Contains each of the menu functions:
+  helpAndOptions() takes no arguments, and returns no values.
+   This is do-while loop that calls seperate functions to:
+   display the How to Play screen
+   display the Controls screen
+  showLeaderboard() takes no arguments and returns no values.
+  playGame: contains the main game loop.
+ Any additional functions for handling input, effects, etc. will be here.
+
+Maze.cpp:
+
+ Contains the class definitions for the maze and a maze item. A maze item is a single grid in the maze.
+  CMazeItem:
+   these will include things such as the type of grid item (wall, corridor), colur, char symbol, etc.
+   These will be partially developed in class
+  CMaze:
+   Contains the vector list of the maze grid
+
+Player.cpp:
+
+ Defines the CPlayer class, which keeps track of some information about the player.
+ This will include:
+  a constructor that sets the letter used to represent the player
+  An overloaded method to set the position, using x and y coords, as well as a COORD type
+  Additional members and methods to handle keeping track of the what the player has done as needed.
+ Parts of this will be developed in class
+
+Leaderboard.cpp:
+
+ The leaderboard code will be very similar to the previous assignment, with minor changes to account for  sorting order.
+ Class CScoreItem and CLeaderboard will be very similar to earlier projects, and must use the STL list.
+
+What to hand in
+----------------
+ A zip file containing your entire solution directory, including maze files and audio files
+ Follow the naming convention
+ Submit it via Blackboard
+
+Marking:
+----------
+Marked out of 20.
+Marks are deducted for commenting, formatting and programming errors as below. As with all programs, it is sometimes possible to get them to work, even though there are coding errors and work arounds to account for problems. As such, the program must also be coded correctly and use properly structured C++ as expected.
+Up to 2 marks deducted for the file header comment: it must have an accurate course #, date, assignment # and description.
+NOTE: The course number is GAM1545. As this is your final assignment, comments will be scrutinized for correctness and clarity, and marks will be deducted for incorrect information (details!)
+1 mark each deducted for an incorrect main file name (main.cpp), or and incorrect solution name (Assignment8.sln).
+Up to 2 marks deducted for inaccurate or missing function comments on every function or method. You DO NOT need information on methods that simply set or get a value, constructors, or complete code that is provided. If you are required to add/complete a piece of code, then it must have a comment.
+Up to 3 marks if your solution is not created using separate files as above.
+Up to 3 marks for each missing feature or requirement depending on severity. A missing feature is defined as "something the program is required to do that it does not do properly". Make sure you use sound where required, that your functions are all present as above, and all work.
+Up to 2 marks will be deducted if your indents and formatting are not proper, as shown in class.
+Up to 2 marks will be deducted for each case of coding errors or problems depending on severity. Examples of coding issues include:
+Bugs/crashes, including rules and scoring.
+Display issues (running off sides, unintended scrolling, etc)
+Copy/pasted or overly redundant code where streamlined code is warranted.
+Incorrect code: eg. = instead of ==, regardless of whether it happens to work.
+Recursive calls.
+Use of globals beyond those introduced for features in-class.
+Duplicate/excessive repeated code where a function or other method was expected.
+Incorrect loop conditions or functionality. Never use “exit()” under any circumstances.
+Missing sounds or colors as required.
+Extra unnecessary/unused code
+Poorly named variables, classes or members that do not follow naming convention.
+Missing inline comments. Code must be documented and readable. Major sections of your code must be commented.
+Plan your code ahead of time to make your job easier. This will improve your grade.
+
+Optional extra:
+
+If anyone would like to attempt a self-generating random maze, in place of the static ones, this can be done. There are many resources for this algorithm on the internet, however the result would still need to be stored in the proper class, etc.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+mycolours.h
+Include the following to set the foreground and background colours into a byte, as shown in class:
+ #ifndef __MYCOLOURS_H
+  #define __MYCOLOURS_H
+    
+  #define BLACK                  0x00 // 0000
+  #define BLUE                    0x01 // 0001
+  #define GREEN                 0x02 // 0010
+  #define CYAN                    0x03 // 0011
+  #define RED                      0x04 // 0100
+  #define MAGENTA             0x05 // 0101
+  #define BROWN                0x06 // 0110
+  #define LIGHT_GRAY         0x07 // 0111
+  #define DARK_GRAY          0x08 // 1000
+  #define LIGHT_BLUE         0x09 // 1001
+  #define LIGHT_GREEN       0x0A // 1010
+  #define LIGHT_CYAN          0x0B // 1011
+  #define LIGHT_RED            0x0C // 1100
+  #define LIGHT_MAGENTA   0x0D // 1101
+  #define YELLOW                 0x0E // 1110
+  #define WHITE                   0x0F // 1111 
+  
+  inline unsigned char setColour(unsigned char f, unsigned char b)
+  {        
+       return (f | (b << 4));
+  } 
+  
+  
+  #endif  

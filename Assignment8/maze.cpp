@@ -4,7 +4,12 @@
 using namespace std;
 #include <string>
 #include<Windows.h>
+#include"mycolours.h"
 
+CMazeTile::CMazeTile()
+{
+	m_hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+}
 bool CMazeTile::setTileFromCharacter(unsigned char c)
 {
 	bool result = true;
@@ -22,6 +27,9 @@ bool CMazeTile::setTileFromCharacter(unsigned char c)
 	case 'K':
 		setTile(MAZE_KEY);
 		break;
+	case 'E':
+		setTile(MAZE_EXIT);
+		break;
 	default:
 		setTile(MAZE_ERROR);
 		break;
@@ -34,23 +42,28 @@ bool CMazeTile::setTile(MazeType c)
 	switch (c)
 	{
 	case MAZE_WALL:
-		//m_colour = setColour(LIGHT_CYAN, BLACK);
+		m_colour = setColour(LIGHT_CYAN, BLACK);
 		m_symbol = (unsigned char)177;
 		m_type = c;
 		break;
 	case MAZE_EMPTY:
-		//m_colour = setColour(LIGHT_CYAN, BLACK);
+		m_colour = setColour(LIGHT_CYAN, BLACK);
 		m_symbol = ' ';
 		m_type = c;
 		break;
 	case MAZE_START:
-		//m_colour = setColour(LIGHT_CYAN, BLACK);
+		m_colour = setColour(RED, BLACK);
 		m_symbol = (unsigned char)16;
 		m_type = c;
 		break;
 	case MAZE_KEY:
-		//m_colour = setColour(LIGHT_CYAN, BLACK);
+		m_colour = setColour(YELLOW, BLACK);
 		m_symbol = (unsigned char)12;
+		m_type = c;
+		break;
+	case MAZE_EXIT:
+		m_colour = setColour(YELLOW, BLACK);
+		m_symbol = (unsigned char)10;
 		m_type = c;
 		break;
 	default:
@@ -63,7 +76,10 @@ bool CMazeTile::setTile(MazeType c)
 }
 void CMazeTile::showTile()
 {
-	cout << unsigned char(m_symbol);
+	if (SetConsoleTextAttribute(m_hStdout, m_colour))
+		cout << unsigned char(m_symbol);
+	else
+		cerr << "setText failed error code: " << GetLastError() << endl;
 }
 bool CMaze::loadMaze(std::string file)
 {
@@ -140,8 +156,8 @@ void CMaze::showMaze()
 	struct _SMALL_RECT screenRect;
 	screenRect.Left = 0;
 	screenRect.Top = 0;
-	screenRect.Right = m_cols - 1;  // x is your desired width
-	screenRect.Bottom = m_rows - 1;  // y is desired height
+	screenRect.Right = m_cols + 1;  // x is your desired width
+	screenRect.Bottom = m_rows + 1;  // y is desired height
 	SetConsoleWindowInfo(hStdout, true, &screenRect);
 
 	for (int r = 0; r < m_rows; r++)

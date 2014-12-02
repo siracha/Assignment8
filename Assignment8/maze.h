@@ -11,7 +11,8 @@ enum MazeType
 	MAZE_WALL,
 	MAZE_START,
 	MAZE_KEY,
-	MAZE_ERROR
+	MAZE_ERROR,
+	MAZE_EXIT
 };
 
 class CMazeTile
@@ -19,11 +20,13 @@ class CMazeTile
 	MazeType m_type;
 	unsigned char m_colour;
 	unsigned char m_symbol;
+	HANDLE m_hStdout;
 public:
 	bool setTileFromCharacter(unsigned char);
 	void showTile();
 	bool setTile(MazeType);
 	MazeType getType();
+	CMazeTile();
 };
 
 class CMaze
